@@ -1,8 +1,10 @@
 from flask import Flask
-app = Flask(__name__)
 
 from flask import session as login_session
-import random, string
+import random
+import string
+
+app = Flask(__name__)
 
 # @reference http://https://classroom.udacity.com/courses/ud330/lessons/3967218625/concepts/39636486150923
 #Create a state token for forgery prevention and store in session for later validation
@@ -17,4 +19,6 @@ def hello_world():
     return 'Hello World!'
 
 if __name__ == '__main__':
-    app.run()
+    app.secret_key = 'super_secret_key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)
