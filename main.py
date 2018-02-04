@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash
+from flask import Flask, render_template, flash, request
 
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 import httplib2
@@ -16,6 +16,15 @@ app = Flask(__name__)
 
 # @reference http://https://classroom.udacity.com/courses/ud330/lessons/3967218625/concepts/39636486150923
 
+# Create anti-forgery state token
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    #Render Login Template return "The current session state is %s" % login_session['state']
+    return render_template('login.html', STATE=state)
+
+
 # Validate the state token
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -28,16 +37,19 @@ def gconnect():
 
 
     try:
-        oauth_flow = flow_from_clientsecrets(client_secrets.json, scope='')
+        # Upgrade auth code into a credentials object
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
         response = make_response(json.dumps('Failed to upgrade the authorisation code.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    #Check token is valid
+
+
+    # Check token is valid
     access_token = credentials.access_token
-    url = ('')
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % access_token)
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
@@ -62,24 +74,24 @@ def gconnect():
         return response
 
     # Check to see if the user is already logged in
-    stored_credentials = login_session.get('credentials')
+    stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
-    if stored credentials is not None and gplus_id == stored_gplus_id:
+    if stored_access_token is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('User is already logged in'), 200)
         response.headers['Content-Type'] = 'application/json'
+        return response
 
     # Store access token in the session
-    login_session['credentials'] = credentials
+    login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get the user's info
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-    data = json.loads(answer.text)
+    data = answer.json()
 
     # Store user data to  create a response
-
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -95,12 +107,6 @@ def gconnect():
     print "done!"
     return output
 
-@app.route('/login')
-def showLogin():
-    state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
-    login_session['state'] = state
-    #Render Login Template return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
 
 @app.route('/')
 @app.route('/hello')

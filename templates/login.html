@@ -1,17 +1,20 @@
 <html>
 <head>
-    <!--Pre-requisites for Google Sign in -->
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
-    </script>
 
-    <script src="//apis.google.com/js/platform.js?onload=start">
-    </script>
-    <!--END-->
+<!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+
 </head>
+
 
 <body>
 
-    <div id="signinButton">
+<!-- GOOGLE PLUS SIGN IN-->
+          <div id="signinButton">
           <span class="g-signin"
             data-scope="openid email"
             data-clientid="585988940161-glf382elu22pvr84d1ss7j1p1fg76ltp.apps.googleusercontent.com"
@@ -19,18 +22,18 @@
             data-accesstype="offline"
             data-cookiepolicy="single_host_origin"
             data-callback="signInCallback"
-            data-approvalprompt="force"> <!--remove in production-->
+            data-approvalprompt="force"> <!--Can remove force in production-->
           </span>
-    </div>
+        </div>
 
 <div id="result"></div>
 
 <script>
 function signInCallback(authResult) {
   if (authResult['code']) {
-    // Hide the sign-in button now that the user is authorized
+    // sign-in button is hidden now that the user is authorized
     $('#signinButton').attr('style', 'display: none');
-    // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+    // Send the unique use code to the server, and write a 'login successful' message if successful. Then redirect back to home page
     $.ajax({
       type: 'POST',
       url: '/gconnect?state={{STATE}}',
@@ -38,27 +41,24 @@ function signInCallback(authResult) {
       data: authResult['code'],
       contentType: 'application/octet-stream; charset=utf-8',
       success: function(result) {
-        // Handle or verify the server response if necessary.
+        // Handle or verify the server's response.
         if (result) {
-          $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+          $('#result').html('Welcome back!</br>'+ result + '</br>Redirecting to home page...')
          setTimeout(function() {
-          window.location.href = "/restaurant";
+          window.location.href = "/hello";
          }, 4000);
 
       } else if (authResult['error']) {
     console.log('There was an error: ' + authResult['error']);
   } else {
-        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+        $('#result').html('Server-side call failed. Check your configuration and console.');
          }
       }
 
   }); } }
 </script>
-
-
-
 <!--END GOOGLE PLUS SIGN IN -->
 
-</body>
+  </body>
 
-</html>
+  </html>
