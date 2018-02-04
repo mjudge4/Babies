@@ -1,0 +1,28 @@
+<html>
+<head>
+    <!--Pre-requisites for Google Sign in -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+    </script>
+
+    <script src="apis.google.com/js/platform.js?onload=start">
+    </script>
+    <!--END-->
+</head>
+
+<body>
+
+    <div id="signinButton">
+          <span class="g-signin"
+            data-scope="openid email"
+            data-clientid="585988940161-glf382elu22pvr84d1ss7j1p1fg76ltp.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force">
+          </span>
+    </div>
+
+</body>
+
+</html>
