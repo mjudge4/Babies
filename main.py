@@ -107,6 +107,40 @@ def gconnect():
     print "done!"
     return output
 
+# Disconnect by revoking user's access token
+
+@app.route('/gdisconnect')
+def gdisconnect():
+    # Only disconnect connected user
+    access_token = login_session.get('access_token')
+
+    if access_token is None:
+        response = make_response(json.dumps('Current User is not connected'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+    # Enact HTTP GET request to revoke current token
+    
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+
+    if result['status'] == '200':
+        # Reset the user session
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        response = make_response(json.dumps('User disconnected.'), 200)
+        response.headers['Content-Type'] = 'application/json'
+        return response
+
+    else:
+        # If for some reason the token is invalid
+        response = make_response(json.dumps('Token revoke for current user failed'), 400)
+        response.headers['Content-Type'] = 'application/json'
+        return response
 
 @app.route('/')
 @app.route('/hello')
