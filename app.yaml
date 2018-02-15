@@ -36,3 +36,12 @@ handlers:
 #libraries:
 #- name: jinja2
 #  version: latest
+
+env_variables:
+    CLOUDSQL_CONNECTION_NAME: pycharm-194111:europe-west2:babiesgrowdatabase
+    CLOUDSQL_USER: root
+    CLOUDSQL_PASSWORD: OLkkD03xAb31IIv1
+
+libraries:
+- name: MySQLdb
+  version: "latest"
