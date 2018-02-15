@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit</title>
+</head>
+<body>
+      <h1>Edit Offering</h1>
+
+    <form action="{{ url_for('editOffering', offering_id=offering.id) }}" method="POST">
+        <p>Title:</p>
+        <input type="text" size="30" name='title' placeholder="{{ offering.title }}">
+
+        <input type="submit" value="Edit">
+    </form>
+</br>
+    <a href='{{url_for('offeringDetail',offering_id = offering.id)}}'>Back</a>
+
+
+</body>
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<html>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+         <ul>
+            {% for message in messages %}
+                <li><strong>{{ message }}</strong></li>
+            {% endfor %}
+         </ul>
+        {% endif %}
+    {% endwith %}
+  <h1>{{offering.title}}</h1>
+
+
+	<div>
+    <h3>{{offering.date}}</br></h3>
+
+        {% for i in tags %}
+        <h5>{{i.tag_name}}</br></h5>
+        {% endfor %}
+
+        {% for j in comments %}
+        <h5>{{j.body}}</br></h5>
+        {% endfor %}
+	</div>
+    <a href='{{ url_for('editOffering', offering_id = offering.id) }}'>Edit</a>
+    </br>
+    <a href='{{ url_for('deleteOffering', offering_id = offering.id) }}'>Delete</a>
+    </br>
+    <a href='{{url_for('offering')}}'>Back</a>
+
+
+
+</body>
+</html>

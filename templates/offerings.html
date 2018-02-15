@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Offerings</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+         <ul>
+            {% for message in messages %}
+                <li><strong>{{ message }}</strong></li>
+            {% endfor %}
+         </ul>
+        {% endif %}
+    {% endwith %}
+
+    <a href = '{{url_for('newOffering') }}'>Add New Offering</a>
+
+    {% for offering in offerings %}
+        <a href="{{url_for('offeringDetail', offering_id = offering.id)}}"> <h3>{{offering.title}}</br></a>
+        <p>{{offering.date}}</br></p>
+
+	{% endfor %}
+
+</body>
+</html>
