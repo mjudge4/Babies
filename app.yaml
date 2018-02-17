@@ -33,7 +33,10 @@ handlers:
 # of the App Engine SDK don't need to be listed here, instead add them to your
 # project directory, either as a git submodule or as a plain subdirectory.
 # TODO: List any other App Engine SDK libs you may need here.
+
 libraries:
+- name: MySQLdb
+  version: "latest"
 - name: jinja2
   version: latest
 
@@ -42,6 +45,4 @@ env_variables:
     CLOUDSQL_USER: root
     CLOUDSQL_PASSWORD: OLkkD03xAb31IIv1
 
-libraries:
-- name: MySQLdb
-  version: "latest"
+
