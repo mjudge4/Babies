@@ -73,8 +73,8 @@ class Comment(Base):
 
 
 
-# Engine instance with a sqllite database
-engine = create_engine('sqlite:///offerings.db')
+# Engine instance with a mysql database
+engine = create_engine('mysql://root:password@localhost/mydatabase')
 
 # Goes into database and creates the tables
 Base.metadata.create_all(engine)

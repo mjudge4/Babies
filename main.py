@@ -8,16 +8,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Offering, Tag, Comment
 
-# These environment variables are configured in app.yaml.
-CLOUDSQL_CONNECTION_NAME = os.environ.get('pycharm-194111:europe-west2:babiesgrowdatabase')
-CLOUDSQL_USER = os.environ.get('root')
-CLOUDSQL_PASSWORD = os.environ.get('OLkkD03xAb31IIv1')
 
 
 
 app = Flask(__name__)
 
-engine = create_engine('sqlite:///offerings.db')
+engine = create_engine('mysql://root:password@localhost/mydatabase')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
@@ -27,31 +23,6 @@ session = DBSession()
 app = Flask(__name__)
 
 
-def connect_to_cloudsql():
-    # When deployed to App Engine, the `SERVER_SOFTWARE` environment variable
-    # will be set to 'Google App Engine/version'.
-    if os.getenv('SERVER_SOFTWARE', '').startswith('Google App Engine/'):
-        # Connect using the unix socket located at
-        # /cloudsql/cloudsql-connection-name.
-        cloudsql_unix_socket = os.path.join(
-            '/cloudsql', pycharm-194111:europe-west2:babiesgrowdatabase)
-
-        db = MySQLdb.connect(
-            unix_socket=cloudsql_unix_socket,
-            user=root,
-            passwd=OLkkD03xAb31IIv1)
-
-    # If the unix socket is unavailable, then try to connect using TCP. This
-    # will work if you're running a local MySQL server or using the Cloud SQL
-    # proxy, for example:
-    #
-    #   $ cloud_sql_proxy -instances=your-connection-name=tcp:3306
-    #
-    else:
-        db = MySQLdb.connect(
-            host='127.0.0.1', user=root, passwd=OLkkD03xAb31IIv1)
-
-    return db
 
 # @reference http://https://classroom.udacity.com/courses/ud330/lessons/3967218625/concepts/39636486150923
 
